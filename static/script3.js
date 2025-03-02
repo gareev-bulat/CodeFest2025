@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Data being sent to backend:", data);
 
-        fetch("/lung", {
+        fetch("/lung1", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

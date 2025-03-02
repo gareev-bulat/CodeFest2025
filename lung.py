@@ -52,7 +52,7 @@ class Lung:
 
 lung_model = Lung()  # Create a global instance
 
-@lung_bp.route('/lung1', methods=['GET', 'POST'])
+@lung_bp.route('/', methods=['GET', 'POST'])
 def predict_lung():
     if request.method == 'POST':
         try:
@@ -65,3 +65,4 @@ def predict_lung():
             return jsonify({"error": str(e)}), 500
 
     return render_template('lung1.html', top_players=lung_model.df.to_dict(orient='records'))
+

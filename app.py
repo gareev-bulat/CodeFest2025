@@ -9,7 +9,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from lung import lung_bp
 app = Flask(__name__)
-app.register_blueprint(lung_bp, url_prefix="/lung")
+app.register_blueprint(lung_bp, url_prefix="/lung1")
 
 # Load environment variables and set API key for OpenAI
 load_dotenv()
@@ -45,6 +45,7 @@ def get_chat_completion(prompt):
     response = requests.post(url, headers=headers, json=payload)
     response.raise_for_status()
     return response.json()
+
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
