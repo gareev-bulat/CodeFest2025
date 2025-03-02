@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}My Flask App{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    
+    {% block extra_head %}
+      <!-- Google Fonts: Roboto -->
+      <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    {% endblock %}
+    
+    <style>
+      /* Apply Roboto as the default font */
+      body, .navbar, .nav-link, .navbar-brand {
+        font-family: "Tinos", serif;
+      }
+
+      /* Enhanced Navbar Styles with Dynamic Animations */
+      .custom-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+        background: linear-gradient(90deg, #2c3e50, #34495e);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        padding: 0.8rem 1rem;
+        transition: background 0.3s ease, padding 0.3s ease;
+      }
+      .custom-navbar:hover {
+        background: linear-gradient(90deg, #243447, #2a3e4a);
+      }
+      /* Example shrink effect; add/remove .shrink with JS as needed */
+      .custom-navbar.shrink {
+        padding: 0.4rem 1rem;
+      }
+      .custom-navbar .navbar-brand {
+        font-size: 1.6rem;
+        font-weight: bold;
+        letter-spacing: 0.05rem;
+        color: #ecf0f1;
+        padding-left: 20;
+        transition: color 0.3s ease, font-size 0.3s ease;
+      }
+      .custom-navbar .navbar-brand:hover {
+        color: #d1e9ff;
+      }
+      .custom-navbar .navbar-nav {
+        flex-direction: row;
+        margin-left: 2rem;
+      }
+      .custom-navbar .nav-item {
+        margin: 0 1rem;
+      }
+      .custom-navbar .nav-link {
+        position: relative;
+        color: #ecf0f1;
+        font-size: 1.4rem;
+        font-weight: bold;
+        letter-spacing: 0.03rem;
+        transition: color 0.3s ease;
+        padding: 0.5rem 0.75rem;
+      }
+      .custom-navbar .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0%;
+        height: 2px;
+        background-color: #d1e9ff;
+        transition: width 0.3s ease;
+      }
+      .custom-navbar .nav-link:hover::after,
+      .custom-navbar .nav-link:focus::after {
+        width: 100%;
+      }
+      .custom-navbar .nav-link:hover,
+      .custom-navbar .nav-link:focus {
+        color: #d1e9ff;
+      }
+      .navbar-toggler {
+        border-color: #ecf0f1;
+        transition: transform 0.3s ease;
+      }
+      .navbar-toggler:hover {
+        transform: rotate(90deg);
+      }
+      .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(236,240,241,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+      }
+
+      /* Global Chatbox Styles with Animations */
+      #chatbot {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        height: 400px;
+        width: 320px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 1100;
+        animation: slideIn 0.5s ease-out;
+      }
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      #chatbot-header {
+        background-color: #4CAF50;
+        color: #ffffff;
+        padding: 12px;
+        font-size: 1.2rem;
+        text-align: center;
+        font-weight: bold;
+        animation: fadeInDown 0.5s ease-out;
+      }
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      #chat-log {
+        flex: 1;
+        padding: 12px;
+        background-color: #f9f9f9;
+        overflow-y: auto;
+        font-size: 0.95rem;
+        animation: fadeIn 0.5s ease-out;
+      }
+      #chatbot-form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-top: 1px solid #ddd;
+        padding: 10px;
+        background-color: #fff;
+      }
+      #chatbot-form textarea {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: none;
+        min-height: 60px;
+        transition: border-color 0.3s ease;
+      }
+      #chatbot-form textarea:focus {
+        border-color: #4CAF50;
+      }
+      #chatbot-form button {
+        padding: 12px;
+        background-color: #4CAF50;
+        border: none;
+        color: #ffffff;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      #chatbot-form button:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg custom-navbar">
+      <a class="navbar-brand" href="#">
+        <img src="../static/assets/heart64.png" width="40" height="40" alt="">
+      </a>
+      <a class="navbar-brand" href="/">Home</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/diabetes_prediction">Diabetes prediction</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/lung1">prediction2</a>
+          </li>
+
+        
+          <li class="nav-item">
+            <a class="nav-link" href="/prediction3">prediction3</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    
+    <div class="container mt-4">
+      {% block content %}{% endblock %}
+    </div>
+    
+    <!-- Global Chatbox -->
+    <div id="chatbot">
+      <div id="chatbot-header">Health Chatbot</div>
+      <div id="chat-log"></div>
+      <form id="chatbot-form">
+        <textarea id="chatbot-input" placeholder="Ask me anything..."></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+    
+    <!-- Optional JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  </body>
+</html>
