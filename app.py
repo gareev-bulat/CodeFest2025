@@ -11,12 +11,11 @@ from lung import lung_bp
 app = Flask(__name__)
 app.register_blueprint(lung_bp, url_prefix="/lung1")
 
-# Load environment variables and set API key for OpenAI
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 openai.api_key = openai_api_key
 
-# Load the model and scaler
+
 model_path = os.path.join(os.getcwd(), "health_model.h5")
 scaler_path = os.path.join(os.getcwd(), "scaler.pkl")
 
@@ -49,27 +48,24 @@ def get_chat_completion(prompt):
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
-        # Get user input and prediction from request
         user_input = request.json.get('message')
-        prediction = request.json.get('prediction')  # Prediction from the AI model
-        print("Received user input:", user_input)  # Log the user input
-        print("Received prediction:", prediction)  # Log the prediction
+        prediction = request.json.get('prediction')  
+        print("Received user input:", user_input)  
+        print("Received prediction:", prediction) 
 
-        # Prepare the prompt for OpenAI API
+      
         prompt = f"The user is at {'High Risk' if prediction == 1 else 'Low Risk'} for diabetes. {user_input}"
         chat_response = get_chat_completion(prompt)
 
-        # Extract the chatbot response
         if "choices" in chat_response and len(chat_response["choices"]) > 0:
             chatbot_response = chat_response["choices"][0]["message"].get("content", "No response provided.")
         else:
             chatbot_response = "No response provided."
 
-        # Return the chatbot response
         return jsonify({"response": chatbot_response})
 
     except Exception as e:
-        print("Error during chat:", str(e))  # Log the exception
+        print("Error during chat:", str(e))  
         return jsonify({"error": str(e)}), 500
 @app.route('/')
 def home():
@@ -93,17 +89,15 @@ def prediction():
 def predict():
     try:
         data = request.get_json()
-        # Complete list of features used during scaler fit
         required_features = [
             'Age', 'Pregnancies', 'BMI', 'Glucose', 'BloodPressure', 'HbA1c',
             'LDL', 'HDL', 'Triglycerides', 'WaistCircumference', 'HipCircumference', 'WHR',
             'FamilyHistory', 'DietType', 'Hypertension', 'MedicationUse'
         ]
         
-        # Define default values for features missing from the form (HDL & Triglycerides)
         defaults = {
-            'HDL': 50,           # default HDL value; adjust as needed
-            'Triglycerides': 150 # default Triglycerides value; adjust as needed
+            'HDL': 50,           
+            'Triglycerides': 150 
         }
         
         features = []
@@ -125,14 +119,12 @@ def predict():
         if missing_fields:
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
 
-        # Convert to DataFrame with feature names to match scaler expectations
         input_df = pd.DataFrame([features], columns=required_features)
         input_data = scaler.transform(input_df)
         prediction = model.predict(input_data)
         prediction_binary = int(prediction[0][0] > 0.5)
         json_result = json.dumps({"prediction": prediction_binary})
 
-        # Get chatbot suggestions
         prompt = f"Give me health suggestions based on my results: {json_result}"
         chat_response = get_chat_completion(prompt)
         if "choices" in chat_response and len(chat_response["choices"]) > 0:
@@ -140,7 +132,6 @@ def predict():
         else:
             suggestions = "No suggestions provided."
         
-        # Format suggestions: split into sentences and wrap each in a <p> tag
         sentences = [s.strip() for s in suggestions.split(".") if s.strip()]
         formatted_suggestions = "".join([f"<p>{s}.</p>" for s in sentences])
         
@@ -153,4 +144,4 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=2700)
+    app.run(debug=True, port=2702)

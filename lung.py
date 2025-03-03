@@ -5,7 +5,7 @@ import joblib
 import numpy as np
 import os
 
-lung_bp = Blueprint('lung1', __name__)  # Correctly define Blueprint
+lung_bp = Blueprint('lung1', __name__) 
 
 class Lung:
     def __init__(self):
@@ -15,7 +15,6 @@ class Lung:
             raise FileNotFoundError(f"File not found: {file_path}")
         self.df = pd.read_csv(file_path)
 
-        # Load the trained lung cancer model and scaler
         self.model_path = "lung_cancer_model.h5"
         self.scaler_path = "scaler1.pkl"
 
@@ -50,7 +49,7 @@ class Lung:
         class_labels = {0: "Low", 1: "Medium", 2: "High"}
         return {"prediction": class_labels[prediction_class]}
 
-lung_model = Lung()  # Create a global instance
+lung_model = Lung()  
 
 @lung_bp.route('/', methods=['GET', 'POST'])
 def predict_lung():

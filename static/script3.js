@@ -5,11 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const chatbotForm = document.getElementById("chatbot-form");
     const chatbotInput = document.getElementById("chatbot-input");
     const spinner = document.getElementById("loadingSpinner");
-    let predictionResult = null; // Store prediction result for chatbot
+    let predictionResult = null; 
 
     healthForm.addEventListener("submit", function (event) {
         event.preventDefault();
-        spinner.style.display = "block"; // Show loading spinner
+        spinner.style.display = "block"; 
 
         const formData = new FormData(this);
         const data = {};
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (result.error) {
                 resultText.innerHTML = `<p>Error: ${result.error}</p>`;
             } else {
-                predictionResult = result.prediction; // Store result for chatbot
+                predictionResult = result.prediction;
                 resultText.innerHTML = `Lung Cancer Risk Level: ${result.prediction}`;
                 document.getElementById("chatbot").style.display = "block";
                 chatLog.innerHTML += `<div class="bot-message">Health Suggestion: ${result.suggestions}</div>`;
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
             resultText.innerHTML = "An error occurred. Please try again.";
         })
         .finally(() => {
-            spinner.style.display = "none"; // Hide spinner after response
+            spinner.style.display = "none"; 
         });
     });
 
